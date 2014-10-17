@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link href="favicon.ico" rel="shortcut icon" type="image/x-icon">
+
+    <title>
+      Make Music with Code!
+    </title>
+
+    <link rel="stylesheet" href="code-guide.css">
+    <link rel="stylesheet" href="chinese.css">
+  </head>
+  <body>
+
+    <header class="masthead">
+      <div class="container">
+        <span class="icon">&#9997;</span>
+        <h1>Make Music with Code</h1>
+        <p class="lead">Craft you own digital sound in a BLINK !</p>
+        <p class="masthead-links">
+          <a href="https://github.com/jiangplus">
+            <span class="icon icon-github-circled"></span>
+          </a>
+        </p>
+      </div>
+    </header>
+
+<div class="section" id="css-editor-prefs">
+  <div class="col">
+    <ul>
+      <li>请打开<a href="https://jinshuju.net/f/KXZWJi">https://jinshuju.net/f/KXZWJi</a>网址报名</li>
+      <li>请打开<a href="http://audio.make-next.com/">http://audio.make-next.com/</a>网址进入界面</li>
+      <li>如果程序编辑不方便，请到<a href="http://www.sublimetext.com/">http://www.sublimetext.com/</a>下载sublime编辑器</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>什么是声音？</h2>
+    <p></p>
+    <p>物理上，声音是物体的振动，其特性由振动的频率和振幅所表征；<br>
+    对于软件来说，一切都是数字，给ta一些信号，ta就会为你输出一些声音:)</p>
+  </div>
+  <div class="col">
+    <blockquote>
+      <p>Signal ==> Sound</p>
+    </blockquote>
+  </div>
+</div>
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>Baudio</h2>
+    <p>一个极简的JavaScript程序包，通过不能更简单的代码，动态产生音频。在<a href="https://github.com/substack">Github</a>上开源发布。在这里，你只需要写出一个函数，返回-1到1之间的一个数值。</p>
+  </div>
+  <div class="col">
+
+<pre><code class="html">
+return function (t) {
+  return sin(441);
+  function sin (x) { return Math.sin(2 * Math.PI * t * x) }
+}
+</code></pre>
+
+  </div>
+</div>
+
+<div class="heading" id="html">
+  <h2>教程</h2>
+</div>
+
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>正弦函数</h2>
+    <p>sin是一种最简单的周期函数，自变量每经过2π函数会回到周期的原点，可以认为完成了一次振动。</p>
+    <p>Baudio的参数t表示程序经过的时间，单位是秒。</p>
+    <p>通过乘上一个倍数，可以构造一个440Hz的正弦波，我们的函数输出结果，每秒钟完成440个正弦波形的周期，在-1到1之间振荡。</p>
+  </div>
+  <div class="col">
+<pre><code class="html">
+return function (t) {
+    return Math.sin(2 * Math.PI * t * 440);
+};
+</code></pre>
+  </div>
+</div>
+
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>变量与函数</h2>
+    <p>可以将函数的一些部分通过变量和子函数抽象出来，简化结构。</p>
+    <p><strong>var tau = 2 * Math.PI</strong><br/>
+    将2π这样一个常用的常量以tau来表达。</p>
+    <p><strong>function sin (freq)</strong><br/>
+    这部分是一个子函数，封装了程序中与sin有关的语意，并且引用了外部函数的t变量。</p>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return sin(400);
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>波形的叠加</h2>
+    <p>可以将两个波形叠加起来，注意：超过-1到1范围的部分会被截断。</p>
+    <p>两个相近的波形叠加起来会有独特的干涉效果</p>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return (sin(400)+sin(401))/1;
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>波的频率</h2>
+    <p>可以用多种方式调整波形的频率，观察有什么效果。</p>
+    <p>你的所有修改，在Code-Music-Studio中都会得到即时的响应。</p>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return (sin(400)+sin(408))/2;
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>方波</h2>
+    <p>方波是另一种基本的波形，可以看做变"方"了的正弦波。</p>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return square(400);
+
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+
+    function square (freq) {
+        return Math.sin(tau * t * freq) < 0 ? -1 : 1;
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>方波的干涉</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return square(400) + square(401);
+
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+
+    function square (freq) {
+        return Math.sin(tau * t * freq) < 0 ? -1 : 1;
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>锯齿波</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return sawtooth(400);
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+    
+    function square (freq) {
+        return Math.sin(tau * t * freq) < 0 ? -1 : 1;
+    }
+    
+    function sawtooth (freq) {
+        return t % (1 / freq) * freq * 2 - 1;
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>锯齿波的干涉</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return sawtooth(400) + sawtooth(401);
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+    
+    function square (freq) {
+        return Math.sin(tau * t * freq) < 0 ? -1 : 1;
+    }
+    
+    function sawtooth (freq) {
+        return t % (1 / freq) * freq * 2 - 1;
+    }
+
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>波形的混合</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return sin(400) + square(401) + sawtooth(408);
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+    
+    function square (freq) {
+        return Math.sin(tau * t * freq) < 0 ? -1 : 1;
+    }
+    
+    function sawtooth (freq) {
+        return t % (1 / freq) * freq * 2 - 1;
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>波形的相乘</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return sin(400) * (sin(1) + sin(2));
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>波形的相乘</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return sin(400) * (sin(3) + sin(4) + sin(5));
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>与锯齿波相乘</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return sawtooth(400) * (sin(3) + sin(4) + sin(5));
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+    
+    function sawtooth (freq) {
+        return t % (1 / freq) * freq * 2 - 1;
+    }
+
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>与锯齿波相乘</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return sawtooth(400) * (sawtooth(3) + sawtooth(4) + sawtooth(5));
+    
+    function sawtooth (freq) {
+        return t % (1 / freq) * freq * 2 - 1;
+    }
+
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>调整振幅</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return (sin(200) + sin(1600)) / 2;
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>波形图案</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return (
+        sin(200)
+        + sin(1600) * (sin(3) + sin(4))
+    ) / 2;
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>波形图案</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    return (
+        sin(200) * (sin(1) + sin(2))
+        + sin(1600) * (sin(3) + sin(4))
+    ) / 2;
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>旋律</h2>
+    <p>通过依次播放不同的音高，编码你的旋律。</p>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+var melody = [ 0, -3/2, 1/5, 4/3, 7/5, 0, -5/6, 1/3 ]
+    .map(function (x) { return Math.pow(2, x) })
+;
+return function (t) {
+    var m = melody[Math.floor(t * 2 % melody.length)];
+    return sin(400 * m);
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>旋律</h2>
+    <p>与各种波形组合，你的旋律可以控制不同的声音效果。</p>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+var melody = [ 0, -3/2, 1/5, 4/3, 7/5, 0, -5/6, 1/3 ]
+    .map(function (x) { return Math.pow(2, x) })
+;
+return function (t) {
+    var m = melody[Math.floor(t * 2 % melody.length)];
+    return (sin(400 * m) + square(800 * m) + sawtooth(100 * m)) / 3;
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+    
+    function square (freq) {
+        return Math.sin(tau * t * freq) < 0 ? -1 : 1;
+    }
+    
+    function sawtooth (freq) {
+        return t % (1 / freq) * freq * 2 - 1;
+    }
+
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>停顿效果</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+var melody = [ 0, -3/2, 1/5, 4/3, 7/5, 0, -5/6, 1/3 ]
+    .map(function (x) { return Math.pow(2, x) })
+;
+return function (t) {
+    var m = melody[Math.floor(t * 2 % melody.length)];
+    return (sin(400 * m) + square(800 * m)
+        + sawtooth(100 * m)
+    ) / 3 * (square(1) + square(4)) / 2;
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+    
+    function square (freq) {
+        return Math.sin(tau * t * freq) < 0 ? -1 : 1;
+    }
+    
+    function sawtooth (freq) {
+        return t % (1 / freq) * freq * 2 - 1;
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>切换效果</h2>
+    <p>通过选择运算符?:与取余数的结合，可以实现各种切换。</p>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+var melody = [ 0, -3/2, 1/5, 4/3, 7/5, 0, -5/6, 1/3 ]
+    .map(function (x) { return Math.pow(2, x) })
+;
+return function (t) {
+    var m = melody[Math.floor(t * 2 % melody.length)];
+    return (sin(400 * m) + square(800 * m)
+        + sawtooth(100 * m)
+    ) / 3 * (
+        t % 4 > 2
+            ? (sin(1) + square(4))
+            : (square(1) + square(4)
+        ) / 2)
+    ;
+    
+    function sin (freq) {
+        return Math.sin(tau * t * freq);
+    }
+    
+    function square (freq) {
+        return Math.sin(tau * t * freq) &lt; 0 ? -1 : 1;
+    }
+    
+    function sawtooth (freq) {
+        return t % (1 / freq) * freq * 2 - 1;
+    }
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>音效</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (tt) {
+
+    var t = tt % 8;
+    
+    var honk = (
+        2 * sin(254)
+        + 5 * sin(4) * sin(508)
+        + 1 * sin(250)
+        + 0.5 * sin(125)
+    );
+    
+    var n = t % 7;
+    var xs = [ 120, 240, 450, 20 ];
+    
+    var speed = tt % 8 > 7 ? 16 : 2;
+    var x = xs[Math.floor(t*speed)%xs.length]
+    var z = tt % 8 < 7 ? 1000 : 80;
+    
+    var f = x + Math.sin(z * (t % 1));
+    
+    return (
+        0.15 * Math.sin(tau * t * f)
+        + 0.1 * Math.sin(tau * t * (f * 2 + 4))
+        + 0.5 * (tt >= 4) * shaker(tt < 16 ? tt : (tt % 4 + 16))
+        + honk
+        + (tt >= 12 && t % (1/2) < 1/24 ? Math.random() : 0)
+    );
+    
+    function sin (x) {
+        return Math.sin(tau * t * x);
+    }
+
+};
+
+function shaker (t) {
+    var n = (Math.sin(t * 2) + 1) * 4;
+    var xs = [ 20, 10, 32, 50, 30 ];
+    var x = xs[Math.floor(t*8)%xs.length];
+    var f = x + Math.sin(1000 * (n % 1));
+    var r = sin(f) * (sin(4) + sin(3) + sin(5)) * sin(4);
+    return r * r;
+    
+    function sin (x) {
+        return Math.sin(tau * t * x);
+    }
+}
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>音效</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (tt) {
+
+    var t = tt % 8;
+    
+    var honk = (tt % 32 >= 15.5 && tt % 32 < 16.5) * (
+        2 * sin(254)
+        + 5 * sin(4) * sin(508)
+        + 1 * sin(250)
+        + 0.5 * sin(125)
+    ) * (sin(3) + sin(5) + sin(0.5)) / 3;
+    
+    var n = t % 7;
+    var xs = [ 120, 240, 450, 20 ];
+    
+    var speed = tt % 8 > 7 ? 16 : 2;
+    var x = xs[Math.floor(t*speed)%xs.length]
+    var z = tt % 8 < 7 ? 1000 : 80;
+    
+    var f = x + Math.sin(z * (t % 1));
+    
+    return (
+        0.15 * Math.sin(tau * t * f)
+        + 0.1 * Math.sin(tau * t * (f * 2 + 4))
+        + 0.5 * (tt >= 4) * shaker(tt < 16 ? tt : (tt % 4 + 16))
+        + honk
+        + (tt >= 12 && t % (1/2) < 1/24 ? Math.random() : 0)
+    );
+    
+    function sin (x) {
+        return Math.sin(tau * t * x);
+    }
+
+};
+
+function shaker (t) {
+    var n = (Math.sin(t * 2) + 1) * 4;
+    var xs = [ 20, 10, 32, 50, 30 ];
+    var x = xs[Math.floor(t*8)%xs.length];
+    var f = x + Math.sin(1000 * (n % 1));
+    var r = sin(f) * (sin(4) + sin(3) + sin(5)) * sin(4);
+    return r * r;
+    
+    function sin (x) {
+        return Math.sin(tau * t * x);
+    }
+}
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>音效</h2>
+    <p>模拟鼓声</p>
+  </div>
+  <div class="col">
+<pre><code class="html">
+var tau = 2 * Math.PI;
+return function (t) {
+    var n = t * 1.4 % 1 + 0.5;
+    var f = Math.sin(tau * tau / ((n * 6 % 1 + 0.5) * 2));
+    return Math.sin(tau * n * f);
+};
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="golden-rule">
+  <div class="col">
+    <h2>旋律</h2>
+  </div>
+  <div class="col">
+<pre><code class="html">
+return function (t) {
+    var melody = [
+        5, 3, 1, 3, 5, 5, 5, 5, 3, 3, 3, 3, 5, 8, 8, 8,
+        5, 3, 1, 3, 5, 5, 5, 5, 3, 3, 5, 3, 1, 1, 1, 1
+    ];
+    var m = melody[Math.floor(t * 4 % melody.length)]
+    return sin(441 * Math.pow(2, m / 12)) * sin(2);
+    function sin (x) { return Math.sin(2 * Math.PI * t * x) }
+}
+</code></pre>
+  </div>
+</div>
+
+
+<div class="section" id="html-practicality">
+  <div class="col">
+    <h3>创造 &amp; 分享</h3>
+    <p>在界面底部的文本框中输入一个名字，点击"save"，即可将你的程序保存起来，这个链接可以用于分享你的创作。</p>
+  </div>
+</div>
+
+
+<div class="section" id="html-practicality">
+  <div class="col">
+    <h3>Good luck!</h3>
+    <p>只能带你来到这里了，如果发现了什么有趣的声音，请别忘了取一个动人的名字，然后分享给全世界。</p>
+  </div>
+</div>
+
+
+<div class="heading" id="css">
+  <h2>参考材料</h2>
+</div>
+
+<div class="section" id="css-editor-prefs">
+  <div class="col">
+    <ul>
+      <li><a href="https://www.npmjs.org/package/baudio">baudio</a></li>
+      <li><a href="http://studio.substack.net/">Code-Music-Studio</a></li>
+      <li><a href="http://audio.make-next.com/">Code-Music-Studio</a>（本地版本）</li>
+      <li><a href="https://github.com/substack">substack</a>（创造了baudio以及所有这有趣的一切的人）</li>
+      <li><a href="https://github.com/jiangplus">jiangplus</a></li>
+    </ul>
+  </div>
+</div>
+
+    <footer class="footer">
+  <p>&lt;3</p>
+  <p>Make Music with Code @ 上海创客嘉年华</p>
+
+</footer>
+
+  </body>
+</html>
